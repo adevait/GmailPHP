@@ -1,0 +1,21 @@
+{
+    "name": "trajchevska/gmail_wrapper",
+    "type": "library",
+    "description": "A PHP client library that consumes Gmail APIs",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Katerina Trajchevska",
+            "email": "trajchevska@adevait.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "google/apiclient": "1.1.*@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "GmailWrapper\\": "src/GmailWrapper/"
+        }
+    }
+}
