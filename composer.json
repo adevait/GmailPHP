@@ -11,7 +11,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "google/apiclient": "1.1.*@dev"
+        "google/apiclient": "1.1.*@dev",
+        "phpmailer/phpmailer": "~5.2"
     },
     "autoload": {
         "psr-4": {

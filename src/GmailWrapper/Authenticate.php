@@ -28,6 +28,7 @@ class Authenticate
             $this->client->setApplicationName($applicationName);
             $this->client->setDeveloperKey($developerKey);
         }
+        $this->gmail = new Google_Service_Gmail($this->client);
     }
 
     /**
@@ -68,7 +69,6 @@ class Authenticate
     public function logIn()
     {
         try {
-            $this->gmail = new Google_Service_Gmail($this->client);
             if (isset($_GET['code'])) {
                 $this->client->authenticate($_GET['code']);
                 $tokens = $this->client->getAccessToken();

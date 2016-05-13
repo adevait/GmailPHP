@@ -4,8 +4,14 @@
  * Class for manipulation with Gmail messages
  */
 namespace GmailWrapper;
+
 use Google_Client;
 use Google_Service_Gmail;
+use Google_Service_Gmail_Message;
+use Google_Service_Gmail_MessagePart;
+use Google_Service_Gmail_MessagePartHeader;
+use Google_Service_Gmail_MessagePartBody;
+use PHPMailer;
 
 class Messages
 {
@@ -57,7 +63,7 @@ class Messages
      * @param  array  $header_params The header parameters to be returned
      * @return array  Array with the message details
      */
-    public function getMessageDetails($message_id, $header_params = array('From','To','Date','Subject'))
+    public function getMessageDetails($message_id, $header_params = array('From', 'To', 'Date', 'Subject'))
     {
         if ($this->authenticate->getTokens()) {
             $gmail = new Google_Service_Gmail($this->authenticate->getClient());
@@ -66,6 +72,9 @@ class Messages
             $files = array();
             try {
                 $message = $gmail->users_messages->get($this->authenticate->getUserId(), $message_id, $opt_param);
+                echo '<pre>';
+                var_dump($message);
+                exit;
                 $message_details = $message['payload'];
                 foreach ($message_details['headers'] as $key => $value) {
                     if (!in_array($value['name'], $header_params)) {
@@ -94,12 +103,49 @@ class Messages
     }
 
     /**
-     * Returns a url decoded string, used to decode the body text of the message
+     * Prepares the email and sends it using Google_Service_Gmail_Message
+     * @param  string $to      Email address to which the message should be sent
+     * @param  string $subject The subject of the email
+     * @param  string $body    The body of the email
+     * @return Google_Service_Gmail_Message  The sent message
+     */
+    public function send($to, $subject, $body)
+    {
+        if ($this->authenticate->getTokens()) {
+            $gmail = new Google_Service_Gmail($this->authenticate->getClient());
+            $message = new Google_Service_Gmail_Message();
+            $mail = new PHPMailer();
+            $user = $this->authenticate->getUserDetails();
+            $mail->From = $user['email'];
+            $mail->FromName = $user['email'];
+            $mail->addAddress($to);
+            $mail->Subject = $subject;
+            $mail->Body = $body;
+            $mail->preSend();
+            $mime = $mail->getSentMIMEMessage();
+            $raw = $this->Base64UrlEncode($mime);
+            $message->setRaw($raw);
+            return $gmail->users_messages->send($this->authenticate->getUserId(), $message);
+        }
+    }
+
+    /**
+     * Returns a base64 decoded web safe string
      * @param  String $string The string to be decoded
-     * @return string         Decoded string
+     * @return string Decoded string
      */
     private function base64UrlDecode($string)
     {
         return base64_decode(str_replace(array('-', '_'), array('+', '/'), $string));
+    }
+
+    /**
+     * Returns a web safe base64 encoded string, used for encoding
+     * @param String $string The string to be encoded
+     * @return String Encoded string
+     */
+    private function Base64UrlEncode($string)
+    {
+        return rtrim(strtr(base64_encode($string), '+/', '-_'), '=');
     }
 }
