@@ -23,7 +23,7 @@ Additional functions that can be used similarly to the ones in the examples are 
 
 ## License
 
-GmailPHP is released under the GPL v3 (or later) license, see misc/gpl-3.0.txt
+GmailPHP is released under the GPL v3 (or later) license
 
 ## Support
 
