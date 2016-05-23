@@ -20,14 +20,12 @@ class Authenticate
     private function __construct($clientID, $clientSecret, $applicationName, $developerKey)
     {
         $this->is_authenticated = false;
-        if (is_null($this->client)) {
-            $this->client = new Google_Client();
-            $this->client_id = $clientID;
-            $this->client->setClientId($clientID);
-            $this->client->setClientSecret($clientSecret);
-            $this->client->setApplicationName($applicationName);
-            $this->client->setDeveloperKey($developerKey);
-        }
+        $this->client = new Google_Client();
+        $this->client_id = $clientID;
+        $this->client->setClientId($clientID);
+        $this->client->setClientSecret($clientSecret);
+        $this->client->setApplicationName($applicationName);
+        $this->client->setDeveloperKey($developerKey);
         $this->gmail = new Google_Service_Gmail($this->client);
     }
 
@@ -66,24 +64,21 @@ class Authenticate
      * Login logic
      * @return boolean The status of the login operation
      */
-    public function logIn()
+    public function logIn($code)
     {
         try {
-            if (isset($_GET['code'])) {
-                $this->client->authenticate($_GET['code']);
-                $tokens = $this->client->getAccessToken();
-                $this->tokens = json_decode($tokens);
-                $attributes = $this->client->verifyIdToken($this->tokens->id_token, $this->client_id)->getAttributes();
-                if ($attributes['payload']['sub']) {
-                    $this->is_authenticated = true;
-                    $this->user_id = $attributes['payload']['sub'];
-                    return true;
-                }
-                return false;
+            $this->client->authenticate($code);
+            $tokens = $this->client->getAccessToken();
+            $this->tokens = json_decode($tokens);
+            $attributes = $this->client->verifyIdToken($this->tokens->id_token, $this->client_id)->getAttributes();
+            if ($attributes) {
+                $this->is_authenticated = true;
+                $this->user_id = $attributes['payload']['sub'];
+                return ['status' => true, 'message' => 'Successfully authenticated.'];
             }
-            return false;
-        } catch (Google_Auth_Exception $e) {
-            print 'An error occurred: ' . $e->getMessage();
+            return ['status' => false, 'message' => 'Error. Please try again.'];
+        } catch (\Google_Auth_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -94,19 +89,21 @@ class Authenticate
      */
     public function isTokenValid($tokens)
     {
-        if (isset($tokens->id_token) && isset($tokens->access_token)) {
+        try {
             $this->client->setAccessToken(json_encode($tokens));
-        }
-        if (!$this->client->isAccessTokenExpired()) {
-            $this->tokens = $tokens;
-            $attributes = $this->client->verifyIdToken($this->tokens->id_token, $this->client_id)->getAttributes();
-            if ($attributes['payload']['sub']) {
-                $this->is_authenticated = true;
-                $this->user_id = $attributes['payload']['sub'];
+            if (!$this->client->isAccessTokenExpired()) {
+                $this->tokens = $tokens;
+                $attributes = $this->client->verifyIdToken($this->tokens->id_token, $this->client_id)->getAttributes();
+                if ($attributes) {
+                    $this->is_authenticated = true;
+                    $this->user_id = $attributes['payload']['sub'];
+                    return ['status' => true, 'message' => 'Token is valid.'];
+                }
+                return ['status' => false, 'message' => 'Error. Please try again.'];
             }
-            return true;
+        } catch(\Google_Auth_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
-        return false;
     }
 
     /**
@@ -116,13 +113,18 @@ class Authenticate
     public function getUserDetails()
     {
         if ($this->is_authenticated) {
-            $me = $this->gmail->users->getProfile('me');
-            return [
-                        'user_id' => $this->user_id,
-                        'email' => $me['emailAddress']
-                    ];
+            try {
+                $me = $this->gmail->users->getProfile('me');
+                return [
+                            'user_id' => $this->user_id,
+                            'email' => $me['emailAddress']
+                        ];
+            } catch(\Google_Service_Exception $e) {
+                return ['status' => false, 'message' => $e->getMessage()];
+            }
+            
         }
-        return false;
+        return ['status' => false, 'message' => 'User is not authenticated.'];
     }
     
     /**

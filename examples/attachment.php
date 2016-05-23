@@ -5,6 +5,7 @@ require_once('config.php');
 
 use GmailWrapper\Authenticate;
 use GmailWrapper\Messages;
+use GmailWrapper\Helper;
 
 if (!isset($_SESSION['tokens'])) {
     header('Location:login.php');
@@ -15,16 +16,18 @@ if (!$authenticate->isTokenValid($_SESSION['tokens'])) {
     header('Location:login.php');
     exit;
 }
-$pageToken = isset($_GET['pageToken']) ? $_GET['pageToken'] : null;
-$msgs = new Messages($authenticate);
-$messageList = $msgs->getMessages([], $pageToken);
-if(!$messageList['status']) {
-    echo $messageList['message'];
+if (!isset($_GET['messageId'])) {
+    header('Location:messages.php');
     exit;
 }
-foreach ($messageList['data'] as $key => $value) {
-    $msgId = $value->getId();
-    echo '<a href="message_details.php?messageId='.$msgId.'">'.$msgId.'</a><br/>';
+$msgs = new Messages($authenticate);
+$attachment = $msgs->getAttachment($_GET['messageId'],$_GET['part_id']);
+if(!$attachment['status']) {
+    echo $attachment['message'];
+    exit;
 }
-$nextToken = $messageList['nextToken'];
-echo '<p><a href="messages.php?pageToken='.$nextToken.'">Next</a></p>';
+foreach ($attachment['data']['headers'] as $key => $value) {
+    header($key.':'.$value);
+}
+echo $attachment['data']['data'];
+
