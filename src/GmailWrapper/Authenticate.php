@@ -4,6 +4,7 @@
  * Class for authenticating with gmail account
  */
 namespace GmailWrapper;
+
 use Google_Client;
 use Google_Service_Gmail;
 
@@ -49,20 +50,31 @@ class Authenticate
      * Returns the login url needed for user authentication
      * @param  string $redirect_url The redirect url where the app should return after authentication
      * @param  array  $scopes       The login scope - permissions requested from the user
-     * @return string               The login url 
+     * @param  string/boolean $accessType     The access type (online or offline), online is default
+     * @param  string/boolean $approvalPrompt Whether to force approval on every login 
+     * @return array       Status and data/error message depending on the success of the operation
      */
-    public function getLogInURL($redirect_url, $scopes = array('openid'))
+    public function getLogInURL($redirect_url, $scopes = array('openid'), $accessType = false, $approvalPrompt = false)
     {
-        $this->client->setRedirectUri($redirect_url);
-        $this->client->setScopes($scopes);
-
-        $loginUrl = $this->client->createAuthUrl();
-        return $loginUrl;
+        try {
+            $this->client->setRedirectUri($redirect_url);
+            $this->client->setScopes($scopes);
+            if ($accessType) {
+                $this->client->setAccessType($accessType);
+            }
+            if($approvalPrompt) {
+                $this->client->setApprovalPrompt($approvalPrompt);
+            }
+            $loginUrl = $this->client->createAuthUrl();
+            return ['status' => true, 'data' => $loginUrl];
+        } catch (\Google_Auth_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        }
     }
 
     /**
      * Login logic
-     * @return boolean The status of the login operation
+     * @return array       Status and message depending on the success of the operation
      */
     public function logIn($code)
     {
@@ -85,7 +97,7 @@ class Authenticate
     /**
      * Check whether the current token is still valid
      * @param  object  $tokens The tokens as returned by Google's API
-     * @return boolean         The status of token validity
+     * @return array       Status and message depending on the token validity
      */
     public function isTokenValid($tokens)
     {
@@ -101,14 +113,14 @@ class Authenticate
                 }
                 return ['status' => false, 'message' => 'Error. Please try again.'];
             }
-        } catch(\Google_Auth_Exception $e) {
+        } catch (\Google_Auth_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
     /**
      * Get the details of the logged in user
-     * @return array|boolean User details if the user is authenticated; false if not
+     * @return array       Status and data/error message depending on the success of the operation
      */
     public function getUserDetails()
     {
@@ -119,12 +131,28 @@ class Authenticate
                             'user_id' => $this->user_id,
                             'email' => $me['emailAddress']
                         ];
-            } catch(\Google_Service_Exception $e) {
+            } catch (\Google_Service_Exception $e) {
                 return ['status' => false, 'message' => $e->getMessage()];
             }
-            
         }
         return ['status' => false, 'message' => 'User is not authenticated.'];
+    }
+
+    /**
+     * Refreshes the access token
+     * @param  string $refreshToken Refresh token returned by Google's API
+     * @return array       Status and error message if the operation is unsuccessful
+     */
+    public function refreshToken($refreshToken)
+    {
+        try {
+            $this->client->refreshToken($refreshToken);
+            $this->tokens = json_decode($this->client->getAccessToken());
+            $this->tokens->refresh_token = $refreshToken;
+            return ['status' => true];
+        } catch (\Google_Auth_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        }
     }
     
     /**

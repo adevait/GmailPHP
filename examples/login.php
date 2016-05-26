@@ -2,14 +2,19 @@
 session_start();
 
 require_once '../vendor/autoload.php';
-require_once('config.php');
+require_once('includes/config.php');
 
 use GmailWrapper\Authenticate;
 
 $authenticate = Authenticate::getInstance(CLIENT_ID,CLIENT_SECRET,APPLICATION_NAME,DEVELOPER_KEY);
 
 if(!$authenticate->isAuthenticated()) {
-    $loginUrl = $authenticate->getLogInURL('http://mwrap.com/examples/login.php', ['openid','https://www.googleapis.com/auth/gmail.readonly','https://mail.google.com/','https://www.googleapis.com/auth/gmail.modify','https://www.googleapis.com/auth/gmail.compose','https://www.googleapis.com/auth/gmail.send']);
+    $response = $authenticate->getLogInURL('http://mwrap.com/examples/login.php', ['openid','https://www.googleapis.com/auth/gmail.readonly','https://mail.google.com/','https://www.googleapis.com/auth/gmail.modify','https://www.googleapis.com/auth/gmail.compose','https://www.googleapis.com/auth/gmail.send'],'offline', 'force');
+    if(!$response['status']) {
+        echo $response['message'];
+        exit;
+    }
+    $loginUrl = $response['data'];
     echo "<a href='{$loginUrl}'>Login</a>";
 }
 if(isset($_GET['code'])) {
@@ -19,6 +24,6 @@ if(isset($_GET['code'])) {
         echo '<pre>';
         var_dump($authenticate->getUserDetails());
     } else {
-        var_dump($auth['message']);
+        echo $auth['message'];
     }
 }

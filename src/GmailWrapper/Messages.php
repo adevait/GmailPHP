@@ -28,13 +28,14 @@ class Messages
     /**
      * Get a list of all messages of the authenticated user
      * @param  string $filter Filtering query options, as used in gmail client
+     * @param  string $PageToken The page identifier - messages are loaded page by page to avoid overload
      * @return array       Status and data/error message depending on the success of the operation
      */
     public function getMessages($optParams = array(), $pageToken = false)
     {
         try {
             $gmail = new Google_Service_Gmail($this->authenticate->getClient());
-            $messages = array();
+            $messages = [];
             if ($pageToken) {
                 $optParams['pageToken'] = $pageToken;
             }
