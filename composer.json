@@ -1,5 +1,5 @@
 {
-    "name": "trajchevska/gmail_wrapper",
+    "name": "adevait/GmailWrapper",
     "type": "library",
     "description": "A PHP client library that consumes Gmail APIs",
     "license": "MIT",
