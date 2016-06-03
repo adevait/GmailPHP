@@ -8,7 +8,7 @@ Installation:
 
 GmailPHP is available via [Composer/Packagist](https://packagist.org/packages/adevait/gmail-wrapper), so you can easily install it by adding the following line to your composer.json file
 
-```"adevait/gmail-wrapper": "1.0"```
+```"adevait/gmail-wrapper": "1.0.*"```
 
 or executing the following in you command line.
 
