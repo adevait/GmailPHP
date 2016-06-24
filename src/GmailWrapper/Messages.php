@@ -47,6 +47,8 @@ class Messages
             }
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -88,6 +90,8 @@ class Messages
             return ['status' => true, 'data' => $data];
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -111,6 +115,8 @@ class Messages
             return ['status' => true, 'data' => $attachmentDetails];
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -132,6 +138,8 @@ class Messages
             }
             return ['status' => true, 'mimeType' => $messageDetails['parts'][$partId]['mimeType'], 'filename' => $messageDetails['parts'][$partId]['filename'] ,'headers' => $attachmentHeaders, 'attachmentId' => $messageDetails['parts'][$partId]['body']['attachmentId']];
         } catch (\Google_Service_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -155,6 +163,8 @@ class Messages
             $response = $gmail->users_messages->send($userId, $message);
             return ['status' => true, 'data' => $response];
         } catch (\Google_Service_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -180,6 +190,8 @@ class Messages
             $response = $gmail->users_drafts->create($userId, $draft);
             return ['status' => true, 'data' => $response];
         } catch (\Google_Service_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -252,6 +264,8 @@ class Messages
             return ['status' => true, 'data' => $gmail->users_messages->trash($this->authenticate->getUserId(), $messageId)];
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -267,6 +281,8 @@ class Messages
             $gmail = new Google_Service_Gmail($this->authenticate->getClient());
             return ['status' => true, 'data' => $gmail->users_messages->untrash($this->authenticate->getUserId(), $messageId)];
         } catch (\Google_Service_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -284,6 +300,8 @@ class Messages
             return ['status' => true, 'data' => $labels];
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -299,6 +317,8 @@ class Messages
             $label = $gmail->users_labels->get($this->authenticate->getUserId(), $labelId);
             return ['status' => true, 'data' => $label];
         } catch (\Google_Service_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -317,6 +337,8 @@ class Messages
             $response = $gmail->users_labels->create($this->authenticate->getUserId(), $label);
             return ['status' => true, 'data' => $label];
         } catch (\Google_Service_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -342,6 +364,8 @@ class Messages
             $response = $gmail->users_messages->modify($this->authenticate->getUserId(), $messageId, $modifyMessageRequest);
             return ['status' => true, 'data' => $response];
         } catch (\Google_Service_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
