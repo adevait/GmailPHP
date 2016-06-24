@@ -216,11 +216,14 @@ class Messages
         }
         $mail = new PHPMailer();
         $user = $this->authenticate->getUserDetails();
+        $mail->CharSet = 'UTF-8';
         $mail->From = $user['email'];
         $mail->FromName = $user['email'];
         $mail->addAddress($to);
         $mail->Subject = $subject;
         $mail->Body = $body;
+        // set this dinamically
+        $mail->IsHTML(true);
         if (!empty($attachment)) {
             foreach ($attachment as $key => $value) {
                 $attachmentParams = array_combine(['name', 'tmpName'], $value);

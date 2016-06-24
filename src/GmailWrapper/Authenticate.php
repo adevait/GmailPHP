@@ -149,7 +149,13 @@ class Authenticate
             $this->client->refreshToken($refreshToken);
             $this->tokens = json_decode($this->client->getAccessToken());
             $this->tokens->refresh_token = $refreshToken;
-            return ['status' => true];
+            $attributes = $this->client->verifyIdToken($this->tokens->id_token, $this->client_id)->getAttributes();
+            if ($attributes) {
+                $this->is_authenticated = true;
+                $this->user_id = $attributes['payload']['sub'];
+                return ['status' => true];
+            }
+            return ['status' => false, 'message' => 'Token is invalid.'];
         } catch (\Google_Auth_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
