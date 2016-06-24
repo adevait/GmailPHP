@@ -167,6 +167,9 @@ class Authenticate
      */
     public function getUserId()
     {
+        if(!$this->user_id) {
+            throw new \Exception("User is not authenticated", 1);
+        }
         return $this->user_id;
     }
 
