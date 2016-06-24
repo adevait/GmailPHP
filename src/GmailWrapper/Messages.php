@@ -49,6 +49,8 @@ class Messages
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -92,6 +94,8 @@ class Messages
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -117,6 +121,8 @@ class Messages
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -140,6 +146,8 @@ class Messages
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -165,6 +173,8 @@ class Messages
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -192,6 +202,8 @@ class Messages
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -266,6 +278,8 @@ class Messages
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -283,6 +297,8 @@ class Messages
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -302,6 +318,8 @@ class Messages
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -319,6 +337,8 @@ class Messages
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -339,6 +359,8 @@ class Messages
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -366,6 +388,8 @@ class Messages
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        } catch(\Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
