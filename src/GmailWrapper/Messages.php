@@ -233,6 +233,7 @@ class Messages
                 if ($threadMessages) {
                     $messageId = $threadMessages[0]->getId();
                     $messageDetails = $this->getMessageDetails($messageId);
+                    $messageDetails = $messageDetails['data'];
                     $subject = $messageDetails['headers']['Subject'];
                     $referenceId = $messageDetails['headers']['Message-Id'];
                 }
