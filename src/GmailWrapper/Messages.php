@@ -107,10 +107,10 @@ class Messages
             $files = [];
             $gmail = new Google_Service_Gmail($this->authenticate->getClient());
             $attachmentDetails = $this->getAttachmentDetailsFromMessage($messageId, $partId);
-            $attachment = $gmail->users_messages_attachments->get($this->authenticate->getUserId(), $messageId, $attachmentDetails['attachmentId']);
             if (!$attachmentDetails['status']) {
                 return $attachmentDetails;
             }
+            $attachment = $gmail->users_messages_attachments->get($this->authenticate->getUserId(), $messageId, $attachmentDetails['attachmentId']);
             $attachmentDetails['data'] = $this->base64UrlDecode($attachment->data);
             return ['status' => true, 'data' => $attachmentDetails];
         } catch (\Google_Service_Exception $e) {
