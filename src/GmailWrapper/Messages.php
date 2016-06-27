@@ -356,7 +356,7 @@ class Messages
             $label = new Google_Service_Gmail_Label();
             $label->setName($name);
             $response = $gmail->users_labels->create($this->authenticate->getUserId(), $label);
-            return ['status' => true, 'data' => $label];
+            return ['status' => true, 'data' => $response];
         } catch (\Google_Service_Exception $e) {
             return ['status' => false, 'message' => $e->getMessage()];
         } catch(\Google_Exception $e) {
