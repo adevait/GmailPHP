@@ -4,7 +4,7 @@
     "description": "A PHP client library that consumes Gmail APIs",
     "keywords": ["gmail","google","API"],
     "homepage": "https://github.com/adevait/GmailPHP",
-    "license": "GPL",
+    "license": "MIT",
     "authors": [
         {
             "name": "Katerina Trajchevska",

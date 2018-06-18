@@ -33,7 +33,7 @@ Additional functions that can be used similarly to the ones in the examples are 
 
 ## License
 
-GmailPHP is released under the GPL v3 (or later) license
+GmailPHP is released under the MIT license
 
 ## Support
 
